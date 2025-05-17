@@ -14,6 +14,7 @@ This is a simple containerized Flask web application that acts as a **visit coun
 
 - Python 3.13
 - Flask
+- Gunicorn
 - SQLite
 - Docker
 - Kubernetes (K3s compatible)
