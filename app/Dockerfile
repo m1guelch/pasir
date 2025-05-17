@@ -7,6 +7,9 @@ RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 WORKDIR /app
 RUN chown appuser:appgroup /app
 
+# Install system dependencies
+RUN apt-get update && apt-get install -y curl --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
 # Copy requirements and install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
@@ -28,3 +31,6 @@ EXPOSE 5000
 
 # Run the application with Gunicorn as production server
 CMD ["gunicorn", "-b", "0.0.0.0:5000", "main:app"]
+
+HEALTHCHECK --interval=20s --timeout=5s --start-period=5s --retries=3 \
+  CMD curl --fail http://localhost:5000/ || exit 1
