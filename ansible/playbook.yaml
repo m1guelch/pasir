@@ -1,0 +1,6 @@
+---
+- name: Instalar K3s en el nodo
+  hosts: k3s
+  become: true
+  roles:
+    - k3s

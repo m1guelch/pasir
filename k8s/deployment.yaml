@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visit-counter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: visit-counter
+  template:
+    metadata:
+      labels:
+        app: visit-counter
+    spec:
+      containers:
+        - name: counter
+          image: tu_usuario_dockerhub/visit-counter:latest
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: db-volume
+              mountPath: /app
+      volumes:
+        - name: db-volume
+          persistentVolumeClaim:
+            claimName: db-pvc
