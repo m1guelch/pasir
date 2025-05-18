@@ -1,6 +1,6 @@
 # ⛓️ Terraform Infrastructure Configuration
 
-This directory contains the Terraform configuration files used to provision and manage the infrastructure required for this project into the Microsoft Azure Cloud.
+This directory contains the Terraform configuration files used to provision and manage the infrastructure required for this project into the **Microsoft Azure Cloud**.
 
 ## 🧱 Structure
 
@@ -15,7 +15,7 @@ This directory contains the Terraform configuration files used to provision and 
 - A supported cloud provider account (in this case, Microsoft Azure)
 - Proper credentials configured (e.g., via environment variables or CLI login)
 
-## ⚒️ Usage
+## ▶️ Usage
 
 ```bash
 # Initialize the configuration

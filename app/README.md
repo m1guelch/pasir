@@ -18,3 +18,16 @@ This is a simple containerized Flask web application that acts as a **visit coun
 - SQLite
 - Docker
 - Kubernetes (K3s compatible)
+
+## 🐳 Build and Run Locally with Docker
+
+```bash
+# Build the image
+docker build -t migue/visit-counter .
+
+# Run the container
+docker run -p 5000:5000 migue/visit-counter
+
+```
+
+Then open http://localhost:5000 in your browser.
