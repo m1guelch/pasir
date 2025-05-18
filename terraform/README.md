@@ -6,6 +6,7 @@ This directory contains Terraform configuration files to deploy a basic infrastr
 
 - `main.tf` – Defines resources including the resource group, virtual network, subnet, network interface, public IP, NSG, and a Linux VM.
 - `variables.tf` – Defines input variables used to customize the deployment.
+- `security-rules.tf` – Defines the security rules for the NSG.
 - `outputs.tf` – Outputs the public IP and VM ID after deployment.
 - `providers.tf` – Specifies the required providers and versions.
 
