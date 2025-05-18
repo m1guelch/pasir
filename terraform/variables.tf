@@ -40,6 +40,11 @@ variable "vm_username" {
   default     = "m1guelch"
 }
 
+variable "ssh_public_key" {
+  description = "Public SSH Key for the VM"
+  type        = string
+}
+
 variable "vm_size" {
   description = "Virtual Machine size"
   type        = string
