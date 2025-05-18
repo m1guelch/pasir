@@ -1,5 +1,31 @@
-This Terraform configuration file includes the necessary resources to create a
-Linux Virtual Machine in Azure, including a Resource Group, Virtual Network,
-Network Security Group, Subnet, Public IP Address, Network Interface, and the VM itself.
+# ⛓️ Terraform Infrastructure Configuration
 
-The configuration uses variables for customization and outputs the VM ID and public IP address.
+This directory contains the Terraform configuration files used to provision and manage the infrastructure required for this project into the Microsoft Azure Cloud.
+
+## 🧱 Structure
+
+- `main.tf` – Entry point for the Terraform configuration. Defines the main infrastructure resources.
+- `variables.tf` – Declares input variables used across the configuration.
+- `outputs.tf` – Defines the output values to be displayed after execution.
+- `providers.tf` – Configures the provider.
+
+## ☑️ Requirements
+
+- Terraform v1.x
+- A supported cloud provider account (in this case, Microsoft Azure)
+- Proper credentials configured (e.g., via environment variables or CLI login)
+
+## ⚒️ Usage
+
+```bash
+# Initialize the configuration
+terraform init
+
+# Review the execution plan
+terraform plan
+
+# Apply the configuration
+terraform apply
+
+# Destroy the resources
+terraform destroy
