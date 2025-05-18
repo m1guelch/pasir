@@ -1,19 +1,20 @@
 # ⛓️ Terraform Infrastructure Configuration
 
-This directory contains the Terraform configuration files used to provision and manage the infrastructure required for this project into the **Microsoft Azure Cloud**.
+This directory contains Terraform configuration files to deploy a basic infrastructure on **Microsoft Azure**. It provisions a single Linux virtual machine with networking components configured to support a K3s (lightweight Kubernetes) cluster deployment.
 
 ## 🧱 Structure
 
-- `main.tf` – Entry point for the Terraform configuration. Defines the main infrastructure resources.
-- `variables.tf` – Declares input variables used across the configuration.
-- `outputs.tf` – Defines the output values to be displayed after execution.
-- `providers.tf` – Configures the provider.
+- `main.tf` – Defines resources including the resource group, virtual network, subnet, network interface, public IP, NSG, and a Linux VM.
+- `variables.tf` – Defines input variables used to customize the deployment.
+- `outputs.tf` – Outputs the public IP and VM ID after deployment.
+- `providers.tf` – Specifies the required providers and versions.
 
 ## ☑️ Requirements
 
-- Terraform v1.x
-- A supported cloud provider account (in this case, Microsoft Azure)
-- Proper credentials configured (e.g., via environment variables or CLI login)
+- Terraform >= 0.12
+- A supported cloud provider account (in this case, Microsoft Azure).
+- Azure CLI authenticated (`az login`).
+- Proper credentials configured (e.g., via environment variables or CLI login).
 
 ## ▶️ Usage
 
@@ -27,5 +28,5 @@ terraform plan
 # Apply the configuration
 terraform apply
 
-# Destroy the resources
+# In case that you want to destroy the resources
 terraform destroy
