@@ -2,6 +2,7 @@
 
 This is a simple containerized Flask web application that acts as a **visit counter**. Every time someone accesses the page, the counter increases and is saved using a local SQLite database.
 
+
 ## 🧩 Features
 
 - Counts and displays visits in real-time
@@ -9,6 +10,7 @@ This is a simple containerized Flask web application that acts as a **visit coun
 - Lightweight Docker image with Python 3.13
 - Kubernetes-ready
 - Runs securely as a non-root user
+
 
 ## 🚀 Technologies Used
 
