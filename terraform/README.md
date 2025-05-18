@@ -12,7 +12,7 @@ This directory contains Terraform configuration files to deploy a basic infrastr
 
 ## ☑️ Requirements
 
-- Terraform >= 0.12
+- Terraform >= 1.12.0
 - A supported cloud provider account (in this case, Microsoft Azure).
 - Azure CLI authenticated (`az login`).
 - Proper credentials configured (e.g., via environment variables or CLI login).
