@@ -1,0 +1,47 @@
+---
+- name: Install K3s
+  shell: |
+    curl -sfL https://get.k3s.io | sh -
+  args:
+    creates: /usr/local/bin/k3s
+
+- name: Ensure k3s service is running
+  systemd:
+    name: k3s
+    state: started
+    enabled: true
+
+- name: Create symlink to kubectl from k3s
+  file:
+    src: /usr/local/bin/kubectl
+    dest: /usr/bin/kubectl
+    state: link
+    force: yes
+
+- name: Create .kube directory for user
+  file:
+    path: "/home/{{ ansible_user }}/.kube"
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Copy kubeconfig to user's home
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: "/home/{{ ansible_user }}/.kube/config"
+    remote_src: yes
+    owner: "{{ ansible_user }}"
+    mode: '0600'
+
+- name: Ensure .kube directory and config are owned by user
+  file:
+    path: "/home/{{ ansible_user }}/.kube"
+    state: directory
+    recurse: yes
+    owner: "{{ ansible_user }}"
+
+- name: Set KUBECONFIG environment variable permanently
+  lineinfile:
+    path: "/home/{{ ansible_user }}/.bashrc"
+    line: 'export KUBECONFIG=$HOME/.kube/config'
+    state: present

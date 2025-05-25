@@ -1,0 +1,8 @@
+---
+- name: 1/2 - Install dependencies and configure K3s
+  hosts: vm-pasir 
+  become: true
+  
+  roles:
+    - dependencies
+    - k3s-config
