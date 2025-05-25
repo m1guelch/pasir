@@ -1,18 +1,18 @@
 FROM python:3.13-slim
 
-# Create a non-privileged user and group
-RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+# Create a non-privileged user and group with permissions
+RUN addgroup --system appgroup && \
+    adduser --system --ingroup appgroup appuser && \
+    mkdir /app && \
+    chown appuser:appgroup /app
 
-# Create and us working directory and set permissions
+# Set working directory
 WORKDIR /app
-RUN chown appuser:appgroup /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y curl --no-install-recommends && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements and install dependencies
+# Install system dependencies and requirements
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy files to container
 COPY src/ .
@@ -32,5 +32,6 @@ EXPOSE 5000
 # Run the application with Gunicorn as production server
 CMD ["gunicorn", "-b", "0.0.0.0:5000", "main:app"]
 
+# Healthcheck to ensure the application is running
 HEALTHCHECK --interval=20s --timeout=5s --start-period=5s --retries=3 \
-  CMD curl --fail http://localhost:5000/ || exit 1
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')" || exit 1
