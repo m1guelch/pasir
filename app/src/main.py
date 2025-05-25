@@ -1,5 +1,5 @@
 # Import Flask and the functions to manage the visit counter
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from db import get_visits, increment_visits
 
 # Create the Flask app
@@ -8,13 +8,12 @@ app = Flask(__name__)
 # Define the main route
 @app.route('/')
 def home():
-    count = get_visits()
-    return render_template("index.html", count=count)
-
-# Define the visit counter route
-@app.route('/visit')
-def visit():
-    count = increment_visits()
+    user_agent = request.headers.get('User-Agent', '').lower()
+    # Only add visit if not a heathcheck or a curl request
+    if 'kube-probe' not in user_agent and 'curl' not in user_agent:
+        count = increment_visits()
+    else:
+        count = get_visits()
     return render_template("index.html", count=count)
 
 # Define the route for K8s probes
