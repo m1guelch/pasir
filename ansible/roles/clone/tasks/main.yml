@@ -1,5 +1,5 @@
 ---
-- name: (1/6) Ensure directory for repository
+- name: (1/7) Ensure directory for repository
   file:
     path: /home/{{ ansible_user }}/pasir
     state: directory
@@ -8,7 +8,7 @@
   become: true
   become_user: "{{ ansible_user }}"
 
-- name: (2/6) Clone the latest version of the repository
+- name: (2/7) Clone the latest version of the repository
   git:
     repo: https://github.com/m1guelch/pasir.git
     dest: /home/{{ ansible_user }}/pasir

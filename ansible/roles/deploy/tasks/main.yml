@@ -1,12 +1,12 @@
 ---
-- name: (3/6) Ensure kubeconfig is set for the user
+- name: (3/7) Ensure kubeconfig is set for the user
   shell: |
     export KUBECONFIG=/home/{{ ansible_user }}/.kube/config
     kubectl get nodes
   register: k3s_status
   changed_when: false
 
-- name: (4/6) Apply all K8s manifests to run the app
+- name: (4/7) Apply all K8s manifests to run the app
   shell: |
     export KUBECONFIG=/home/{{ ansible_user }}/.kube/config
     kubectl apply -f .
@@ -15,10 +15,14 @@
   become: true
   become_user: "{{ ansible_user }}"
 
-- name: (5/6) Get K8s resources
+- name: (5/7) Wait untill the app is running
+  pause:
+    seconds: 15
+
+- name: (6/7) Get K8s resources
   command: kubectl get all
   register: kubectl_get_all
 
-- name: (6/6) Show K8s resources
+- name: (7/7) Show K8s resources
   debug:
     var: kubectl_get_all.stdout_lines
