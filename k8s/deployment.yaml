@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: visit-counter
+  name: visit-counter-deployment
 spec:
   replicas: 1
   selector:
@@ -13,14 +13,33 @@ spec:
         app: visit-counter
     spec:
       containers:
-        - name: counter
-          image: tu_usuario_dockerhub/visit-counter:latest
-          ports:
-            - containerPort: 5000
-          volumeMounts:
-            - name: db-volume
-              mountPath: /app
+      - name: visit-counter
+        image: m1guelch/visit-counter:latest
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: visit-counter-storage
+          mountPath: /data
+        env:
+        - name: DB_PATH
+          value: "/data/visits.db"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 20
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 3
       volumes:
-        - name: db-volume
-          persistentVolumeClaim:
-            claimName: db-pvc
+      - name: visit-counter-storage
+        persistentVolumeClaim:
+          claimName: visit-counter-pvc
