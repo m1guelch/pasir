@@ -1,5 +1,5 @@
 ---
-- name: (3/9) Deploy Nginx Proxy Manager container
+- name: (3/7) Deploy Nginx Proxy Manager container
   ansible.builtin.command: docker compose up -d
   args:
     chdir: /home/{{ ansible_user }}/pasir/ansible/roles/deploy/files
@@ -7,36 +7,27 @@
     DOCKER_HOST: unix:///var/run/docker.sock
   become: true
 
-- name: (4/9) Check if NPM container is running
+- name: (4/7) Check if NPM container is running
   command: docker ps
   register: docker_ps
   changed_when: false
 
-- name: (5/9) Show running containers
+- name: (5/7) Show running containers
   debug:
     var: docker_ps.stdout_lines
 
-- name: (6/9) Ensure kubeconfig is set for the user
+- name: (6/7) Ensure kubeconfig is set for the user
   shell: |
     export KUBECONFIG=/home/{{ ansible_user }}/.kube/config
     kubectl get nodes
   register: k3s_status
   changed_when: false
 
-- name: (7/9) Deploy PersistentVolumeClaim
-  kubernetes.core.k8s:
-    kubeconfig: /home/{{ ansible_user }}/.kube/config
-    state: present
-    src: "/home/{{ ansible_user }}/pasir/k8s/pvc.yaml"
-
-- name: (8/9) Deploy Deployment
-  kubernetes.core.k8s:
-    kubeconfig: /home/{{ ansible_user }}/.kube/config
-    state: present
-    src: "/home/{{ ansible_user }}/pasir/k8s/deployment.yaml"
-
-- name: (9/9) Deploy Service
-  kubernetes.core.k8s:
-    kubeconfig: /home/{{ ansible_user }}/.kube/config
-    state: present
-    src: "/home/{{ ansible_user }}/pasir/k8s/service.yaml"
+- name: (7/7) Apply all Kubernetes manifests to run the app
+  shell: |
+    export KUBECONFIG=/home/{{ ansible_user }}/.kube/config
+    kubectl apply -f .
+  args:
+    chdir: /home/{{ ansible_user }}/pasir/k8s
+  become: true
+  become_user: "{{ ansible_user }}"
