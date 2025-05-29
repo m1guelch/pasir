@@ -1,10 +1,10 @@
 ---
-- name: Update system and upgrade packages
+- name: (1/15) Update system and upgrade packages
   apt:
     update_cache: true
     upgrade: dist
 
-- name: Install required packages
+- name: (2/15) Install required packages
   apt:
     name:
       - curl
@@ -13,7 +13,7 @@
       - git
     state: present
 
-- name: Install Docker dependencies
+- name: (3/15) Install Docker dependencies
   apt:
     name:
       - ca-certificates
@@ -21,19 +21,19 @@
       - lsb-release
     state: present
 
-- name: Add Docker GPG key
+- name: (4/15) Add Docker GPG key
   get_url:
     url: https://download.docker.com/linux/debian/gpg
     dest: /etc/apt/keyrings/docker.asc
     mode: '0644'
 
-- name: Add Docker repository
+- name: (5/15) Add Docker repository
   apt_repository:
     repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
     state: present
     filename: docker
 
-- name: Install Docker Engine and Docker compose
+- name: (6/15) Install Docker Engine and Docker compose
   apt:
     name:
       - docker-ce
@@ -43,13 +43,13 @@
     state: present
     update_cache: true
 
-- name: Enable and start Docker service
+- name: (7/15) Enable and start Docker service
   systemd:
     name: docker
     enabled: true
     state: started
 
-- name: Add user to docker group
+- name: (8/15) Add user to docker group
   user:
     name: "{{ ansible_user }}"
     groups: docker
