@@ -16,7 +16,7 @@
   become_user: "{{ ansible_user }}"
 
 - name: (5/6) Get K8s resources
-  command: kubectl get all -A
+  command: kubectl get all
   register: kubectl_get_all
 
 - name: (6/6) Show K8s resources
