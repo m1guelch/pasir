@@ -10,9 +10,9 @@ services:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
     ports:
-      - "80:30090"
-      - "81:30091"
-      - "443:30092"
+      - "30090:80"
+      - "30091:81"
+      - "30092:443"
     networks:
       - npm_net
     depends_on:
