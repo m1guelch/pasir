@@ -1,0 +1,8 @@
+---
+- name: 2/2 - Clone manifests and deploy the app
+  hosts: vm-pasir 
+  become: true
+  
+  roles:
+    - clone
+    - deploy

@@ -1,0 +1,42 @@
+---
+- name: Deploy Nginx Proxy Manager container
+  ansible.builtin.command: docker compose up -d
+  args:
+    chdir: /home/{{ ansible_user }}/pasir/ansible/roles/deploy/files
+  environment:
+    DOCKER_HOST: unix:///var/run/docker.sock
+  become: true
+
+- name: Check if NPM container is running
+  command: docker ps
+  register: docker_ps
+  changed_when: false
+
+- name: Show running containers
+  debug:
+    var: docker_ps.stdout_lines
+
+- name: Ensure kubeconfig is set for the user
+  shell: |
+    export KUBECONFIG=/home/{{ ansible_user }}/.kube/config
+    kubectl get nodes
+  register: k3s_status
+  changed_when: false
+
+- name: Deploy PersistentVolumeClaim
+  kubernetes.core.k8s:
+    kubeconfig: /home/{{ ansible_user }}/.kube/config
+    state: present
+    src: "/home/{{ ansible_user }}/pasir/k8s/pvc.yaml"
+
+- name: Deploy Deployment
+  kubernetes.core.k8s:
+    kubeconfig: /home/{{ ansible_user }}/.kube/config
+    state: present
+    src: "/home/{{ ansible_user }}/pasir/k8s/deployment.yaml"
+
+- name: Deploy Service
+  kubernetes.core.k8s:
+    kubeconfig: /home/{{ ansible_user }}/.kube/config
+    state: present
+    src: "/home/{{ ansible_user }}/pasir/k8s/service.yaml"

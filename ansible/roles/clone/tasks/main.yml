@@ -1,0 +1,19 @@
+---
+- name: Ensure directory for repository
+  file:
+    path: /home/{{ ansible_user }}/pasir
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: '0755'
+  become: true
+  become_user: "{{ ansible_user }}"
+
+- name: Clone the latest version of the repository
+  git:
+    repo: https://github.com/m1guelch/pasir.git
+    dest: /home/{{ ansible_user }}/pasir
+    version: main
+    force: yes
+    update: yes
+  become: true
+  become_user: "{{ ansible_user }}"
