@@ -1,29 +1,12 @@
 ---
-- name: (3/7) Deploy Nginx Proxy Manager container
-  ansible.builtin.command: docker compose up -d
-  args:
-    chdir: /home/{{ ansible_user }}/pasir/ansible/roles/deploy/files
-  environment:
-    DOCKER_HOST: unix:///var/run/docker.sock
-  become: true
-
-- name: (4/7) Check if NPM container is running
-  command: docker ps
-  register: docker_ps
-  changed_when: false
-
-- name: (5/7) Show running containers
-  debug:
-    var: docker_ps.stdout_lines
-
-- name: (6/7) Ensure kubeconfig is set for the user
+- name: (3/6) Ensure kubeconfig is set for the user
   shell: |
     export KUBECONFIG=/home/{{ ansible_user }}/.kube/config
     kubectl get nodes
   register: k3s_status
   changed_when: false
 
-- name: (7/7) Apply all Kubernetes manifests to run the app
+- name: (4/6) Apply all K8s manifests to run the app
   shell: |
     export KUBECONFIG=/home/{{ ansible_user }}/.kube/config
     kubectl apply -f .
@@ -31,3 +14,11 @@
     chdir: /home/{{ ansible_user }}/pasir/k8s
   become: true
   become_user: "{{ ansible_user }}"
+
+- name: (5/6) Get K8s resources
+  command: kubectl get all -A
+  register: kubectl_get_all
+
+- name: (6/6) Show K8s resources
+  debug:
+    var: kubectl_get_all.stdout_lines
