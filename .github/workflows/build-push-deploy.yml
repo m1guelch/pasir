@@ -72,4 +72,4 @@ jobs:
 
       - name: Output app URL
         run: |
-          echo "::notice title=Deployment successful::App deployed → http://m1guelch.com:30080"
+          echo "::notice title=Deployment successful::App deployed → m1guelch.com:30080"
