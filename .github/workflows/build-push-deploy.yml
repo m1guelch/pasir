@@ -71,4 +71,5 @@ jobs:
           kubectl $KUBECTL_OPTS get svc
 
       - name: Output app URL
-        run: echo "✅ App deployed → http://m1guelch.com:30080"
+        run: |
+          echo "::notice title=Deployment successful::App deployed → http://m1guelch.com:30080"
