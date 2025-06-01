@@ -69,6 +69,9 @@ jobs:
           echo "❌ App did not respond after several attempts."
           exit 1
 
+      - name: Wait for deployment to stabilize
+        run: sleep 15
+
       - name: Verify deployment
         run: |
           kubectl $KUBECTL_OPTS get all
