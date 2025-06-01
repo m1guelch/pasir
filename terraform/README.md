@@ -27,7 +27,7 @@ terraform init
 terraform plan
 
 # Apply the configuration
-terraform apply
+terraform apply -auto-approve -var "ssh_public_key=[your-public-key]"
 
 # In case that you want to destroy the resources
 terraform destroy
