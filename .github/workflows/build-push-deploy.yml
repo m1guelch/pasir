@@ -1,0 +1,67 @@
+name: Build, push and deploy Docker image to K3s
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: m1guelch/visit-counter:latest
+      KUBECTL_OPTS: "--insecure-skip-tls-verify=true"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to DockerHub registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        run: |
+          docker build --no-cache -t $IMAGE_NAME ./${{ github.event.repository.name }}/app
+          docker push $IMAGE_NAME
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_DATA }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Update deployment in K3s cluster
+        run: |
+          kubectl $KUBECTL_OPTS set image deployment/visit-counter visit-counter=m1guelch/visit-counter:latest
+          kubectl $KUBECTL_OPTS rollout status deployment/visit-counter
+
+      - name: Check app is responding
+        run: |
+          for i in {1..5}; do
+            if curl --fail --silent --show-error http://m1guelch.com:30080/health; then
+              echo "App is responding!"
+              exit 0
+            else
+              echo "App not responding yet, retrying..."
+              sleep 5
+            fi
+          done
+          echo "❌ App did not respond after several attempts."
+          exit 1
+
+      - name: Verify deployment
+        run: |
+          kubectl $KUBECTL_OPTS get pods
+          kubectl $KUBECTL_OPTS get svc
+
+      - name: Output app URL
+        run: echo "✅ App deployed → http://m1guelch.com:30080"
