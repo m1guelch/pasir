@@ -3,9 +3,7 @@ from flask import Flask, render_template, request
 from db import get_visits, increment_visits
 
 # Create the Flask app
-app = Flask(__name__,
-            template_folder="src/templates",
-            static_folder="src/static")
+app = Flask(__name__)
 
 # Define the main route
 @app.route('/')
