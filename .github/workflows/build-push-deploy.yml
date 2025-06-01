@@ -10,12 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: m1guelch/visit-counter:latest
+      APP_URL: http://m1guelch.com:30080
+      IMAGE_NAME: m1guelch/visit-counter
       KUBECTL_OPTS: "--insecure-skip-tls-verify=true"
-
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Set image tag from commit SHA
+        run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       - name: Log in to DockerHub registry
         uses: docker/login-action@v2
@@ -25,8 +29,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build --no-cache -t $IMAGE_NAME ./app
-          docker push $IMAGE_NAME
+          docker build --no-cache -t $IMAGE_NAME:$IMAGE_TAG ./app
+          docker push $IMAGE_NAME:$IMAGE_TAG
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
@@ -48,13 +52,13 @@ jobs:
 
       - name: Update deployment in K3s cluster
         run: |
-          kubectl $KUBECTL_OPTS set image deployment/visit-counter-deployment visit-counter=m1guelch/visit-counter:latest
+          kubectl $KUBECTL_OPTS set image deployment/visit-counter-deployment visit-counter=$IMAGE_NAME:$IMAGE_TAG
           kubectl $KUBECTL_OPTS rollout status deployment/visit-counter-deployment
 
       - name: Check app is responding
         run: |
           for i in {1..5}; do
-            if curl --fail --silent --show-error http://m1guelch.com:30080/health; then
+            if curl --fail --silent --show-error $APP_URL/health; then
               echo "App is responding!"
               exit 0
             else
@@ -71,4 +75,4 @@ jobs:
 
       - name: Output app URL
         run: |
-          echo "::notice title=Deployment successful::App deployed → m1guelch.com:30080"
+          echo "::notice title=Deployment successful::App deployed → $APP_URL"
