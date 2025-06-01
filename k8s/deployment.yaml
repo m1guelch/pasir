@@ -15,6 +15,7 @@ spec:
       containers:
       - name: visit-counter
         image: m1guelch/visit-counter:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         volumeMounts:
