@@ -39,10 +39,17 @@ jobs:
           echo "${{ secrets.KUBECONFIG_DATA }}" > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl $KUBECTL_OPTS apply -f ./k8s/
+
+      - name: Debug - List deployments
+        run: kubectl $KUBECTL_OPTS get deployments
+
       - name: Update deployment in K3s cluster
         run: |
-          kubectl $KUBECTL_OPTS set image deployment/visit-counter visit-counter=m1guelch/visit-counter:latest
-          kubectl $KUBECTL_OPTS rollout status deployment/visit-counter
+          kubectl $KUBECTL_OPTS set image deployment/visit-counter-deployment visit-counter=m1guelch/visit-counter:latest
+          kubectl $KUBECTL_OPTS rollout status deployment/visit-counter-deployment
 
       - name: Check app is responding
         run: |
