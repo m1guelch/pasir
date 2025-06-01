@@ -67,8 +67,7 @@ jobs:
 
       - name: Verify deployment
         run: |
-          kubectl $KUBECTL_OPTS get pods
-          kubectl $KUBECTL_OPTS get svc
+          kubectl $KUBECTL_OPTS get all
 
       - name: Output app URL
         run: |
