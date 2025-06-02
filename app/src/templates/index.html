@@ -3,13 +3,14 @@
 <head>
     <title>Visit Counter</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script defer src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
     <div class="counter-box">
         <h1>¡Hello! This page has been visited:</h1>
         <p class="counter" id="visit-count">{{ count }}</p>
-        <h2>times.</h2>
+        <h1>times.</h1>
     </div>
 </body>
 </html>
