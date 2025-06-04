@@ -4,11 +4,11 @@ This is a simple containerized Flask web application that acts as a **visit coun
 
 ## 🧩 Features
 
-- Counts and displays visits in real-time
-- Uses SQLite for persistent storage
-- Lightweight Docker image with Python 3.13
-- Kubernetes-ready
-- Runs securely as a non-root user
+- Counts and displays visits in real-time.
+- Uses SQLite for persistent storage.
+- Lightweight Docker image with Python 3.13.
+- Kubernetes-ready.
+- Runs securely as a non-root user.
 
 ## 🚀 Technologies Used
 
@@ -18,6 +18,12 @@ This is a simple containerized Flask web application that acts as a **visit coun
 - SQLite
 - Docker
 - Kubernetes (K3s compatible)
+
+## ☑️ Requirements
+
+- Docker installed and running.
+- Internet access to download base images and dependencies.
+- Python 3.13 (only required if you want to run it locally).
 
 ## 🐳 Build and Run Locally with Docker
 
